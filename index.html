@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using &lt;custom-elements&gt; in production</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <slide-show>
+      <text-slide>
+        Using &lt;custom-elements&gt; in production
+      </text-slide>
+      <text-slide>
+        Who am I?
+        
+        Thomas Wilburn, The Seattle Times
+        *@thomaswilburn* pretty much everywhere
+      </text-slide>
+      <text-slide>
+        Web components 101
+        
+        Custom elements, templates, shadow DOM, HTML imports
+        
+        AKA: Angular directives, React components, Polymer tags
+      </text-slide>
+      <text-slide>
+        Guild Wars 2
+        <img src="https://wiki.guildwars2.com/images/d/da/Trading_Post_searching.jpg">
+      </text-slide>
+      <text-slide>
+        Custom Elements at the Seattle Times
+        
+        The Times is one of the *largest deployments* of non-Polymer custom elements in the world*.
+        
+        We use them on a daily basis, in front of a general audience.
+      </text-slide>
+      <text-slide>
+        Why use custom elements?
+        
+        Reusable building blocks
+        
+        Simple DSLs for non-coders
+        
+        No proprietary frameworks
+      </text-slide>
+      <text-slide>
+        How we build components
+        
+        *Polyfill* for custom elements
+        
+        *Build system* for everything else
+      </text-slide>
+      <text-slide>
+        &lt;responsive-frame&gt;
+        
+        Paired elements to create a seamless iframe
+        
+        <a target="_blank" href="https://github.com/seattletimes/responsive-frame">source</a> / <a target="_blank" href="http://apps.seattletimes.com/tags/responsive-frame/">demo</a>
+      </text-slide>
+      <text-slide>
+        &lt;image-slider&gt;
+        
+        Creates before/after image comparison declaratively
+        
+        <a target="_blank" href="https://github.com/seattletimes/component-image-slider">source</a> / <a target="_blank" href="http://projects.seattletimes.com/2016/elwha/#slider">demo</a>
+      </text-slide>
+      <text-slide>
+        &lt;leaflet-map&gt;
+        
+        Basic users can build locator maps quickly
+        
+        Advanced users can skip past Leaflet boilerplate
+      </text-slide>
+      <text-slide>
+        Sub-elements
+        
+        *&lt;tile-layer&gt;* - adds backdrops
+        
+        *&lt;map-marker&gt;* - declare markers
+        
+        *&lt;geo-json&gt;* - load data
+      </text-slide>
+      <text-slide>
+        JS interface on the element
+        
+        *element.leaflet* and *element.map* for instance objects
+        
+        *element.lookup* to access generated content via ID
+      </text-slide>
+      <text-slide>
+        Demonstration
+        
+        You're looking at it!
+        
+        This slideshow is a web component.
+      </text-slide>
+      <text-slide>
+        Where do we go from here?
+        
+        *registerElement()* is being replaced.
+        
+        *customElements.define()* is relatively similar.
+        
+        Meanwhile, polyfills will continue to work.
+      </text-slide>
+      <text-slide>
+        If I've convinced you...
+        
+        Build small, self-contained elements to start
+        
+        Work with the grain of the DOM
+      </text-slide>
+    </slide-show>
+    <div class="progress-bar">
+      <div class="bar"></div>
+    </div>
+    <script src="slide-show.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
