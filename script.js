@@ -19,8 +19,14 @@ document.body.addEventListener("keydown", function(e) {
 var hash = window.location.hash.replace("#", "");
 if (hash) slideshow.setAttribute("index", hash);
 
+var setBar = function(index, length) {
+  var width = index / (length - 1);
+  bar.style.width = width * 100 + "%";
+};
+
+setBar(slideshow.state.current, slideshow.state.length);
+
 slideshow.addEventListener("slides-changed", function(e) {
   window.location.hash = e.detail.index;
-  var width = e.detail.index / (e.detail.length - 1);
-  bar.style.width = width * 100 + "%";
+  setBar(e.detail.index, e.detail.length);
 });

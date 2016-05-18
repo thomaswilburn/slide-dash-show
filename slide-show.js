@@ -68,7 +68,7 @@ proto.createdCallback = function() {
   });
   
   // Let's make some state available and start up
-  this.state = { current: 0, content, observer };
+  this.state = { current: 0, length: 0, content, observer };
   this.setSlide(0);
   this.dispatchEvent(new CustomEvent("slides-ready"));
   
@@ -115,6 +115,7 @@ proto.setSlide = function(index) {
   if (!selected) return;
   // Update our internal state
   this.state.current = index;
+  this.state.length = items.length;
   // Load and transform <text-slide>'s contents
   var slide = parseSlideText(selected.innerHTML);
   // Fill the content div with our new slide contents
