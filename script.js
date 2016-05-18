@@ -27,6 +27,6 @@ var setBar = function(index, length) {
 setBar(slideshow.state.current, slideshow.state.length);
 
 slideshow.addEventListener("slides-changed", function(e) {
-  window.location.hash = e.detail.index;
+  history.replaceState(null, null, "#" + e.detail.index);
   setBar(e.detail.index, e.detail.length);
 });
