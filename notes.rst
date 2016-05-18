@@ -45,14 +45,3 @@ Cascadia Slides
 14. If you're thinking about it
   a. Build small, self-contained things to start
   b. Work with the grain of the DOM
-  
-<slide-show>
-  <text-slide>
-  Markdown/RST
-  </text-slide>
-<slide-show>
-
-Fires events on transition
-Attributes updated with current slide index
-Methods for setting slide
-Glue code wires the slides up to controls, URLs
