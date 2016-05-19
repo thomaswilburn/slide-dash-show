@@ -60,7 +60,7 @@ var slideShowProto = Object.create(HTMLElement.prototype);
 // Called when the element is first created
 // V1: this is done in the constructor
 slideShowProto.createdCallback = function() {
-  
+
   // If we have Shadow DOM, let's make a root to put our generated HTML
   // Note: createShadowRoot() is becoming attachShadow()
   var root = this.createShadowRoot ? this.createShadowRoot() : this;
@@ -73,6 +73,9 @@ slideShowProto.createdCallback = function() {
   // Add a div to be the visible slide
   var content = document.createElement("div");
   content.className = "content";
+  content.setAttribute("aria-live", "assertive");
+  content.setAttribute("aria-atomic", true);
+  content.setAttribute("aria-relevant", "text");
   root.appendChild(content);
   
   // Create an observer to watch the <text-slide> children
@@ -162,7 +165,9 @@ slideShowProto.setSlide = function(index) {
   var type = selected.tagName.toLowerCase();
   var slide = parsers[type](selected.innerHTML);
   // Fill the content div with our new slide contents
-  this.state.content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
+  var content = this.state.content;
+  content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
+  content.firstElementChild.focus();
   // Let listeners know that we've changed slides
   this.dispatchEvent(new CustomEvent("slides-changed", {
     detail: {
