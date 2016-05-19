@@ -1,48 +1,7 @@
-// Introducing: <slide-show> (and its partner, <text-slide>)!
+// Introducing: <slide-show>!
 
 // Throughout this text, "V1" refers to the new customElements interface:
 // https://w3c.github.io/webcomponents/spec/custom/
-
-// First, as a warm-up, we'll make text-slide work:
-
-var textSlideProto = Object.create(HTMLElement.prototype);
-// In V1 and ES6, this line is way easier: 
-// class TextSlideElement extends HTMLElement { ...
-
-// Parse the world's worst structured text format
-textSlideProto.parseContents = function() {
-  var lines = this.innerHTML.trim().split("\n");
-  // First line is a headline
-  var headline = lines.shift();
-  var body = lines.map(function(line) {
-    line = line.trim();
-    // Blank lines become paragraphs
-    if (!line) return "<p>";
-    // Terrible bold/preformatted support
-    return line.replace(/\*(.*?)\*/g, "<b>$1</b>") + "<br>";
-  }).join("\n");
-  return { headline, body }; 
-};
-
-// Register the element
-document.registerElement("text-slide", { prototype: textSlideProto });
-// V1 version:
-// window.customElements.define("text-slide", TextSlideElement);
-
-// Let's also make a code-slide, which will be very similar
-var codeSlideProto = Object.create(HTMLElement.prototype);
-codeSlideProto.parseContents = function() {
-  var lines = this.innerHTML.trim().split("\n");
-  var headline = lines.shift();
-  var minLeading = Math.min.apply(null, lines.filter(l => l.trim()).map(l => l.match(/^\s*/)[0].length));
-  var replacer = new RegExp(`^\\s{${minLeading}}`);
-  var body = lines.map(l => l.replace(replacer, "")).join("\n").trim();
-  body = "<pre><code>" + body + "</code></pre>";
-  return { headline, body }
-};
-document.registerElement("code-slide", { prototype: codeSlideProto });
-
-// Now for the slide-show itself, which will use more advanced features:
 
 // Styles for the slide-show element's children (which we will generate)
 var stylesheet = `
@@ -94,7 +53,9 @@ var stylesheet = `
   `;
 
 // Create its prototype
-var slideShowProto = Object.create(HTMLDivElement.prototype);
+var slideShowProto = Object.create(HTMLElement.prototype);
+// V1/ES6 version:
+// class SlideShowElement extends HTMLElement { ... }
 
 // Called when the element is first created
 // V1: this is done in the constructor
@@ -162,18 +123,44 @@ slideShowProto.detachedCallback = function() {
   this.state.observer.disconnect();
 };
 
+var parsers = {
+  "text-slide": function(html) {
+    var lines = html.trim().split("\n");
+    // First line is a headline
+    var headline = lines.shift();
+    var body = lines.map(function(line) {
+      line = line.trim();
+      // Blank lines become paragraphs
+      if (!line) return "<p>";
+      // Terrible bold/preformatted support
+      return line.replace(/\*(.*?)\*/g, "<b>$1</b>") + "<br>";
+    }).join("\n");
+    return { headline, body }; 
+  },
+  "code-slide": function(html) {
+    var lines = html.trim().split("\n");
+    var headline = lines.shift();
+    var minLeading = Math.min.apply(null, lines.filter(l => l.trim()).map(l => l.match(/^\s*/)[0].length));
+    var replacer = new RegExp(`^\\s{${minLeading}}`);
+    var body = lines.map(l => l.replace(replacer, "")).join("\n").trim();
+    body = "<pre><code>" + body + "</code></pre>";
+    return { headline, body }
+  }
+}
+
 // These methods are available on the element itself
 slideShowProto.setSlide = function(index) {
   index *= 1;
   // Find all slide children, and grab the current slide
   var items = this.querySelectorAll("text-slide, code-slide");
   var selected = items[index];
-  if (!selected || !selected.parseContents) return;
+  if (!selected) return;
   // Update our internal state
   this.state.current = index;
   this.state.length = items.length;
   // Load the slide's contents
-  var slide = selected.parseContents();
+  var type = selected.tagName.toLowerCase();
+  var slide = parsers[type](selected.innerHTML);
   // Fill the content div with our new slide contents
   this.state.content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
   // Let listeners know that we've changed slides
@@ -202,8 +189,7 @@ slideShowProto.previousSlide = function() {
   this.shiftSlide(-1);
 };
 
-// If using the webcomponents.js polyfill, force *-slide upgrades before installing slide-show
-if (window.CustomElements && CustomElements.upgradeDocument) CustomElements.upgradeDocument(document);
-
 // And now, the final registration:
 document.registerElement("slide-show", { prototype: slideShowProto });
+// V1 version:
+// window.customElements.define("slide-show", SlideShowElement);
