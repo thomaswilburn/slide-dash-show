@@ -88,7 +88,8 @@ var stylesheet = `
     padding: 20px;
     box-shadow: inset 4px 4px 16px rgba(255, 255, 255, .1);
     background: #333;
-    color: #eee
+    color: #eee;
+    display: inline-block;
   }
   `;
 

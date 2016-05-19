@@ -85,6 +85,27 @@
         &lt;/image-slider&gt;
       </code-slide>
       <text-slide>
+        &lt;svg-map&gt;
+
+        Used on our election pages to load inline SVG
+
+        Caches resources and provides DOM utilities
+
+        <a target="_blank" href="http://projects.seattletimes.com/2015/election-results/">demo</a>
+      </text-slide>
+      <code-slide>
+        Easy manipulation
+
+        &lt;svg-map src="assets/countyMap.svg"&gt;
+        &lt;/svg-map&gt;
+
+        &lt;script&gt;
+          svgMap.eachPath(".county", shape => {
+            // update map styles with results
+          });
+        &lt;/script&gt;
+      </code-slide>
+      <text-slide>
         &lt;leaflet-map&gt;
         
         Basic users can build locator maps quickly
