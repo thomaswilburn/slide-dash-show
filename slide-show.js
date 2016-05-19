@@ -121,7 +121,7 @@ slideShowProto.createdCallback = function() {
   // Let's make some state available and start up
   this.state = { current: 0, length: 0, content, observer };
   // this.setSlide(0);
-  this.dispatchEvent(new CustomEvent("slides-ready"));
+  this.dispatchEvent(new CustomEvent("slides-ready", { detail: { index: this.state.current, length: this.state.length }}));
   
   // Trigger attribute changes after construction
   // In V1, they may not be available in the constructor,
@@ -200,6 +200,9 @@ slideShowProto.nextSlide = function() {
 slideShowProto.previousSlide = function() {
   this.shiftSlide(-1);
 };
+
+// If using the webcomponents.js polyfill, force *-slide upgrades before installing slide-show
+if (window.CustomElements && CustomElements.upgradeDocument) CustomElements.upgradeDocument(document);
 
 // And now, the final registration:
 document.registerElement("slide-show", { prototype: slideShowProto });

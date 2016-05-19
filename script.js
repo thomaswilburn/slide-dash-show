@@ -24,7 +24,7 @@ var setBar = function(index, length) {
   bar.style.width = width * 100 + "%";
 };
 
-if (slideshow.state) setBar(slideshow.state.current, slideshow.state.length);
+slideshow.addEventListener("slides-ready", e => setBar(e.detail.index, e.detail.length));
 
 slideshow.addEventListener("slides-changed", function(e) {
   history.replaceState(null, null, "#" + e.detail.index);
