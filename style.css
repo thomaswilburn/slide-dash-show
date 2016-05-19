@@ -34,3 +34,27 @@ slide-show {
 text-slide, code-slide {
   display: none;
 }
+
+a.control {
+  position: fixed;
+  bottom: 10px;
+  font-size: 100px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  padding: 20px;
+  transition: opacity .2s linear;
+  opacity: .3;
+}
+
+a.control:hover {
+  opacity: .8;
+}
+
+a.control.previous-slide {
+  left: 0px;
+}
+
+a.control.next-slide {
+  right: 0px;
+}

@@ -30,3 +30,15 @@ slideshow.addEventListener("slides-changed", function(e) {
   history.replaceState(null, null, "#" + e.detail.index);
   setBar(e.detail.index, e.detail.length);
 });
+
+var $ = s => Array.prototype.slice.call(document.querySelectorAll(s));
+
+var clickedButton = function(e) {
+  if (e.target.classList.contains("next-slide")) {
+    slideshow.nextSlide();
+  } else {
+    slideshow.previousSlide();
+  }
+}
+
+$("a.control").forEach(el => el.addEventListener("click", clickedButton));

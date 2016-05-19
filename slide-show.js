@@ -26,8 +26,8 @@ var stylesheet = `
   }
   
   .content img {
-    max-width: 80%;
-    max-height: 80%;
+    max-width: 80vw;
+    max-height: 80vh;
   }
   
   .content a {
@@ -138,7 +138,7 @@ var parsers = {
       // Terrible bold/preformatted support
       return line.replace(/\*(.*?)\*/g, "<b>$1</b>") + "<br>";
     }).join("\n");
-    return { headline, body }; 
+    return { headline, body };
   },
   "code-slide": function(html) {
     var lines = html.trim().split("\n");
