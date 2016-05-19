@@ -120,7 +120,7 @@ slideShowProto.createdCallback = function() {
   
   // Let's make some state available and start up
   this.state = { current: 0, length: 0, content, observer };
-  this.setSlide(0);
+  // this.setSlide(0);
   this.dispatchEvent(new CustomEvent("slides-ready"));
   
   // Trigger attribute changes after construction
@@ -167,7 +167,7 @@ slideShowProto.setSlide = function(index) {
   // Find all slide children, and grab the current slide
   var items = this.querySelectorAll("text-slide, code-slide");
   var selected = items[index];
-  if (!selected) return;
+  if (!selected || !selected.parseContents) return;
   // Update our internal state
   this.state.current = index;
   this.state.length = items.length;
