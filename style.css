@@ -30,3 +30,7 @@ slide-show {
   width: 0px;
   transition: all .2s ease-in-out;
 }
+
+text-slide, code-slide {
+  display: none;
+}

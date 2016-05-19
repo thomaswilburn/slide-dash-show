@@ -30,9 +30,10 @@
       <text-slide>
         Web components at The Seattle Times
         
-        The Times is one of the *largest deployments* of non-Polymer custom elements in the world*.
+        The Times is one of the *largest deployments* of custom elements in the world.<sup>*</sup>
         
         We use them on a daily basis, in front of a general audience.
+        
       </text-slide>
       <text-slide>
         Why use components?
@@ -57,6 +58,17 @@
         
         <a target="_blank" href="https://github.com/seattletimes/responsive-frame">source</a> / <a target="_blank" href="http://apps.seattletimes.com/tags/responsive-frame/">test page</a> / <a target="_blank" href="http://www.seattletimes.com/business/real-estate/buffetts-mobile-home-business-has-most-to-gain-from-deregulation-plan/">demo</a>
       </text-slide>
+      <code-slide>
+        No (new) JS required
+        
+        &lt;!-- host page --&gt;
+        &lt;responsive-frame src="child.html"&gt;&lt;/responsive-frame&gt;
+        
+        &lt;!-- guest page --&gt;
+        &lt;responsive-child&gt;
+          &lt;!-- content goes here --&gt;
+        &lt;/responsive-child&gt;
+      </code-slide>
       <text-slide>
         &lt;image-slider&gt;
         
@@ -64,6 +76,14 @@
         
         <a target="_blank" href="https://github.com/seattletimes/component-image-slider">source</a> / <a target="_blank" href="http://projects.seattletimes.com/2016/elwha/#slider">demo #1</a> / <a target="_blank" href="http://projects.seattletimes.com/2016/felix-at-30/">demo #2</a>
       </text-slide>
+      <code-slide>
+        Graceful degradation
+        
+        &lt;image-slider&gt;
+          &lt;img src="first.jpg"&gt;
+          &lt;img src="second.jpg"&gt;
+        &lt;/image-slider&gt;
+      </code-slide>
       <text-slide>
         &lt;leaflet-map&gt;
         
@@ -73,15 +93,19 @@
         
         <a target="_blank" href="http://projects.seattletimes.com/2016/local/mayday-map/">demo</a>
       </text-slide>
-      <text-slide>
-        Sub-elements
+      <code-slide>
+        Declarative DSL
         
-        *&lt;tile-layer&gt;* - adds backdrops
-        
-        *&lt;map-marker&gt;* - declare markers
-        
-        *&lt;geo-json&gt;* - load data
-      </text-slide>
+        &lt;leaflet-map lat="47" lng="-122" zoom="7"&gt;
+          &lt;tile-layer layer="cartoPositron"&gt;&lt;/tile-layer&gt;
+          &lt;map-marker lat="47" lng="-122"&gt;
+            This is the pop-up content!
+          &lt;/map-marker&gt;
+          &lt;geo-json&gt;
+            { features: [...] }
+          &lt;/geo-json&gt;
+        &lt;/leaflet-map&gt;
+      </code-slide>
       <text-slide>
         JS interface on the element
         
