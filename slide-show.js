@@ -120,7 +120,7 @@ slideShowProto.createdCallback = function() {
   
   // Let's make some state available and start up
   this.state = { current: 0, length: 0, content, observer };
-  // this.setSlide(0);
+  this.setSlide(0);
   this.dispatchEvent(new CustomEvent("slides-ready", { detail: { index: this.state.current, length: this.state.length }}));
   
   // Trigger attribute changes after construction
@@ -148,7 +148,7 @@ slideShowProto.attributeChangedCallback = function(prop, before, after) {
 slideShowProto.attachedCallback = function() {
   // Hook up our observer whenever we're in the document
   this.state.observer.observe(this, {
-    subtree: true,
+    // subtree: true, //sadly, crashes Firefox with the polyfill
     childList: true,
     characterData: true
   });
