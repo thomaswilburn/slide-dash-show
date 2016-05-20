@@ -82,6 +82,9 @@ slideShowProto.createdCallback = function() {
   
   // Create an observer to watch the <text-slide> children
   var observer = new MutationObserver((mutations) => {
+    //filter out changes to the content div if Shadow DOM isn't active
+    mutations = mutations.filter(m => m.target != content);
+    if (!mutations.length) return;
     this.setSlide(this.state.current);
   });
   
@@ -115,7 +118,7 @@ slideShowProto.attributeChangedCallback = function(prop, before, after) {
 slideShowProto.attachedCallback = function() {
   // Hook up our observer whenever we're in the document
   this.state.observer.observe(this, {
-    // subtree: true, //sadly, crashes Firefox with the polyfill
+    subtree: true,
     childList: true,
     characterData: true
   });
