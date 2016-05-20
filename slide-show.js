@@ -91,7 +91,12 @@ slideShowProto.createdCallback = function() {
   // Let's make some state available and start up
   this.state = { current: 0, length: 0, content, observer };
   this.setSlide(0);
-  this.dispatchEvent(new CustomEvent("slides-ready", { detail: { index: this.state.current, length: this.state.length }}));
+  this.dispatchEvent(new CustomEvent("slides-ready", {
+    detail: {
+      index: this.state.current,
+      length: this.state.length
+    }
+  }));
   
   // Trigger attribute changes after construction
   // In V1, they may not be available in the constructor,
