@@ -4,6 +4,8 @@
 // https://w3c.github.io/webcomponents/spec/custom/
 
 // Styles for the slide-show element's children (which we will generate)
+// We're going to put this here, because if Shadow DOM is supported, the
+// styles will be isolated from the rest of the page
 var stylesheet = `
   .content {
     font-family: Roboto, sans-serif;
@@ -126,6 +128,8 @@ slideShowProto.detachedCallback = function() {
   this.state.observer.disconnect();
 };
 
+// Fun challenge: implement these on the elements instead!
+// Watch out, elements are not guaranteed to upgrade in order.
 var parsers = {
   "text-slide": function(html) {
     var lines = html.trim().split("\n");
