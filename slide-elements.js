@@ -1,3 +1,7 @@
+// In addition to the slide-show, we have two child elements
+// Each one controls its own parsing, and notifies the slide-show of updates via events
+
+// text-slide is the base element. code-slide just changes the parser.
 var textProto = Object.create(HTMLElement.prototype);
 var codeProto = Object.create(textProto);
 

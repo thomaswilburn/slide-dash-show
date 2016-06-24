@@ -118,6 +118,7 @@ slideShowProto.attributeChangedCallback = function(prop, before, after) {
 };
 
 // V1: this is "connectedCallback" instead
+// This is used in a more interesting way in slide-elements.js
 slideShowProto.attachedCallback = function() {};
 
 // V1: this becomes "disconnectedCallback"
@@ -125,27 +126,27 @@ slideShowProto.detachedCallback = function() {};
 
 // Lots of things may trigger render, but defer it to a single update on the next frame
 slideShowProto.scheduleRender = function(index) {
-  if (typeof index != "undefined") this.state.current = index;
+  if (typeof index != "undefined") this.state.current = index * 1;
   if (this.waitingToRender) return;
   this.waitingToRender = true;
   requestAnimationFrame(() => this.render());
 }
 
 // These methods are available on the element itself
-slideShowProto.render = function(index) {
+slideShowProto.render = function() {
   this.waitingToRender = false;
-  if (typeof index == "undefined") index = this.state.current;
-  index *= 1;
-  // Find all slide children, and grab the current slide
+  // Find all slide children
   var items = this.querySelectorAll("text-slide,code-slide");
-  var selected = items[index];
-  if (!selected) return;
-  // Update our internal state
-  this.state.current = index;
+  // Update our internal state a bit
   this.state.length = items.length;
-  // Load the slide's contents
+  if (this.state.current > items.length - 1) this.state.current = items.length - 1;
+  if (this.state.current < 0) this.state.current = 0;
+  // get the current slide
+  var selected = items[this.state.current];
+  if (!selected) return;
+  // Load the slide's contents from participating elements
   var slide = selected.parseSlide ? selected.parseSlide() : {};
-  // Fill the content div with our new slide contents
+  // Fill the content div with our new slide text
   var content = this.state.content;
   content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
   content.firstElementChild.focus();
