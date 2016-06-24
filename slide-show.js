@@ -80,17 +80,12 @@ slideShowProto.createdCallback = function() {
   content.setAttribute("aria-relevant", "text");
   root.appendChild(content);
   
-  // Create an observer to watch the <text-slide> children
-  var observer = new MutationObserver((mutations) => {
-    //filter out changes to the content div if Shadow DOM isn't active
-    mutations = mutations.filter(m => m.target != content);
-    if (!mutations.length) return;
-    this.setSlide(this.state.current);
-  });
+  // deferred rendering
+  this.waitingToRender = null;
   
   // Let's make some state available and start up
-  this.state = { current: 0, length: 0, content, observer };
-  this.setSlide(0);
+  this.state = { current: 0, length: 0, content, root };
+  this.scheduleRender();
   this.dispatchEvent(new CustomEvent("slides-ready", {
     detail: {
       index: this.state.current,
@@ -105,6 +100,9 @@ slideShowProto.createdCallback = function() {
     var attr = this.attributes[i];
     this.attributeChangedCallback(attr.name, null, attr.value);
   }
+  
+  // Listen for updates from children
+  this.addEventListener("slide-content", e => this.scheduleRender());
 };
 
 // When attributes change, update the slideshow to match
@@ -112,7 +110,7 @@ slideShowProto.createdCallback = function() {
 slideShowProto.attributeChangedCallback = function(prop, before, after) {
   switch (prop) {
     case "index":
-      this.setSlide(after);
+      this.render(after);
       break;
       
     // TODO: other attributes go here
@@ -120,62 +118,33 @@ slideShowProto.attributeChangedCallback = function(prop, before, after) {
 };
 
 // V1: this is "connectedCallback" instead
-slideShowProto.attachedCallback = function() {
-  // Hook up our observer whenever we're in the document
-  this.state.observer.observe(this, {
-    subtree: true,
-    childList: true,
-    characterData: true
-  });
-  this.setSlide(this.state.current);
-};
+slideShowProto.attachedCallback = function() {};
 
 // V1: this becomes "disconnectedCallback"
-slideShowProto.detachedCallback = function() {
-  // Don't watch for changes when not connected
-  this.state.observer.disconnect();
-};
+slideShowProto.detachedCallback = function() {};
 
-// Fun challenge: implement these on the elements instead!
-// Watch out, elements are not guaranteed to upgrade in order.
-var parsers = {
-  "text-slide": function(html) {
-    var lines = html.trim().split("\n");
-    // First line is a headline
-    var headline = lines.shift();
-    var body = lines.map(function(line) {
-      line = line.trim();
-      // Blank lines become paragraphs
-      if (!line) return "<p>";
-      // Terrible bold/preformatted support
-      return line.replace(/\*(.*?)\*/g, "<b>$1</b>") + "<br>";
-    }).join("\n");
-    return { headline, body };
-  },
-  "code-slide": function(html) {
-    var lines = html.trim().split("\n");
-    var headline = lines.shift();
-    var minLeading = Math.min.apply(null, lines.filter(l => l.trim()).map(l => l.match(/^\s*/)[0].length));
-    var replacer = new RegExp(`^\\s{${minLeading}}`);
-    var body = lines.map(l => l.replace(replacer, "")).join("\n").trim();
-    body = "<pre><code>" + body + "</code></pre>";
-    return { headline, body }
-  }
+// Lots of things may trigger render, but defer it to a single update on the next frame
+slideShowProto.scheduleRender = function(index) {
+  if (typeof index != "undefined") this.state.current = index;
+  if (this.waitingToRender) return;
+  this.waitingToRender = true;
+  requestAnimationFrame(() => this.render());
 }
 
 // These methods are available on the element itself
-slideShowProto.setSlide = function(index) {
+slideShowProto.render = function(index) {
+  this.waitingToRender = false;
+  if (typeof index == "undefined") index = this.state.current;
   index *= 1;
   // Find all slide children, and grab the current slide
-  var items = this.querySelectorAll("text-slide, code-slide");
+  var items = this.querySelectorAll("text-slide,code-slide");
   var selected = items[index];
   if (!selected) return;
   // Update our internal state
   this.state.current = index;
   this.state.length = items.length;
   // Load the slide's contents
-  var type = selected.tagName.toLowerCase();
-  var slide = parsers[type](selected.innerHTML);
+  var slide = selected.parseSlide ? selected.parseSlide() : {};
   // Fill the content div with our new slide contents
   var content = this.state.content;
   content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
@@ -195,7 +164,7 @@ slideShowProto.getSlide = function() {
 };
 
 slideShowProto.shiftSlide = function(delta) {
-  this.setSlide(this.state.current + delta);
+  this.scheduleRender(this.state.current + delta);
 };
 
 slideShowProto.nextSlide = function() {
