@@ -11,6 +11,7 @@ textProto.createdCallback = function() {
 
 textProto.notifyParent = function() {
   var e = new CustomEvent("slide-content", { bubbles: true });
+  this.parseSlide();
   this.dispatchEvent(e);
 };
 
@@ -39,6 +40,7 @@ textProto.parseSlide = function() {
     // Terrible bold/preformatted support
     return line.replace(/\*(.*?)\*/g, "<b>$1</b>") + "<br>";
   }).join("\n");
+  this.parsedContent = { headline, body };
   return { headline, body };
 };
 
@@ -50,6 +52,7 @@ codeProto.parseSlide = function() {
   var replacer = new RegExp(`^\\s{${minLeading}}`);
   var body = lines.map(l => l.replace(replacer, "")).join("\n").trim();
   body = "<pre><code>" + body + "</code></pre>";
+  this.parsedContent = { headline, body };
   return { headline, body }
 };
 

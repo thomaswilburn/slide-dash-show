@@ -54,14 +54,24 @@ var stylesheet = `
   }
   `;
 
+// create the element constructor
+// This is only called direclty in V1
+var SlideShowElement = function() {
+  this.upgrade();
+}
+
 // Create its prototype
-var slideShowProto = Object.create(HTMLElement.prototype);
-// V1/ES6 version:
-// class SlideShowElement extends HTMLElement { ... }
+var slideShowProto = SlideShowElement.prototype = Object.create(HTMLElement.prototype);
 
 // Called when the element is first created
 // V1: this is done in the constructor
 slideShowProto.createdCallback = function() {
+  this.upgrade();
+};
+
+// By moving initialization into its own method, we can trigger it for
+// both V0 and V1 codepaths
+slideShowProto.upgrade = function() {
 
   // If we have Shadow DOM, let's make a root to put our generated HTML
   // Note: createShadowRoot() is becoming attachShadow()
@@ -129,7 +139,7 @@ slideShowProto.scheduleRender = function(index) {
   if (typeof index != "undefined") this.state.current = index * 1;
   if (this.waitingToRender) return;
   this.waitingToRender = true;
-  requestAnimationFrame(() => this.render());
+  window.requestAnimationFrame(() => this.render());
 }
 
 // These methods are available on the element itself
@@ -145,7 +155,7 @@ slideShowProto.render = function() {
   var selected = items[this.state.current];
   if (!selected) return;
   // Load the slide's contents from participating elements
-  var slide = selected.parseSlide ? selected.parseSlide() : {};
+  var slide = selected.parsedContent || {}
   // Fill the content div with our new slide text
   var content = this.state.content;
   content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
