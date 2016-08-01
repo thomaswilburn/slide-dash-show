@@ -95,7 +95,7 @@ slideShowProto.upgrade = function() {
   this.waitingToRender = null;
   
   // Let's make some state available and start up
-  this.state = { current: 0, length: 0, content, root };
+  this.state = { current: this.getAttribute("index") * 1, length: 0, content, root };
   this.scheduleRender();
   this.dispatchEvent(new CustomEvent("slides-ready", {
     detail: {
@@ -114,6 +114,8 @@ slideShowProto.upgrade = function() {
   
   // Listen for updates from children
   this.addEventListener("slide-content", e => this.scheduleRender());
+  var watcher = new MutationObserver(() => this.scheduleRender());
+  watcher.observe(this, { childList: true });
 };
 
 // When attributes change, update the slideshow to match
@@ -121,7 +123,7 @@ slideShowProto.upgrade = function() {
 slideShowProto.attributeChangedCallback = function(prop, before, after) {
   switch (prop) {
     case "index":
-      this.render(after);
+      this.scheduleRender(after);
       break;
       
     // TODO: other attributes go here
