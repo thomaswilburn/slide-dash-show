@@ -55,7 +55,8 @@ var stylesheet = `
   `;
 
 // create the element constructor
-// This is only called direclty in V1
+// This is only called directly in V1
+// V1 also recommends `class SlideShowElement extends HTMLElement`
 var SlideShowElement = function() {
   this.upgrade();
 }
@@ -129,10 +130,10 @@ slideShowProto.attributeChangedCallback = function(prop, before, after) {
 
 // V1: this is "connectedCallback" instead
 // This is used in a more interesting way in slide-elements.js
-slideShowProto.attachedCallback = function() {};
+slideShowProto.attachedCallback = slideShowProto.connectedCallback = function() {};
 
 // V1: this becomes "disconnectedCallback"
-slideShowProto.detachedCallback = function() {};
+slideShowProto.detachedCallback = slideShowProto.disconnectedCallback = function() {};
 
 // Lots of things may trigger render, but defer it to a single update on the next frame
 slideShowProto.scheduleRender = function(index) {
@@ -142,7 +143,6 @@ slideShowProto.scheduleRender = function(index) {
   window.requestAnimationFrame(() => this.render());
 }
 
-// These methods are available on the element itself
 slideShowProto.render = function() {
   this.waitingToRender = false;
   // Find all slide children
