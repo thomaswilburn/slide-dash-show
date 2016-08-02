@@ -1,3 +1,10 @@
+// Important notes:
+// 1. <slide-show> uses events and properties for all communication
+// 2. Parents shouldn't assume that children exist or are upgraded
+// 3. Code is written to work in V0 and V1
+
+var $ = s => Array.prototype.slice.call(document.querySelectorAll(s));
+
 var slideshow = document.querySelector("slide-show");
 var bar = document.querySelector(".progress-bar .bar");
 
@@ -30,8 +37,6 @@ slideshow.addEventListener("slides-changed", function(e) {
   history.replaceState(null, null, "#" + e.detail.index);
   setBar(e.detail.index, e.detail.length);
 });
-
-var $ = s => Array.prototype.slice.call(document.querySelectorAll(s));
 
 var clickedButton = function(e) {
   if (e.target.classList.contains("next-slide")) {

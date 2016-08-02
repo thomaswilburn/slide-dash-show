@@ -25,7 +25,7 @@
       </text-slide>
       <text-slide>
         Guild Wars 2
-        <img src="https://wiki.guildwars2.com/images/d/da/Trading_Post_searching.jpg">
+        <img src="./Trading_Post_searching.jpg">
       </text-slide>
       <text-slide>
         Web components at The Seattle Times
@@ -53,6 +53,7 @@
 
         We have <a target="_blank" href="https://github.com/seattletimes/component-template">a template</a>
       </text-slide>
+      <!--
       <text-slide>
         &lt;responsive-frame&gt;
         
@@ -71,6 +72,7 @@
           &lt;!-- content goes here --&gt;
         &lt;/responsive-child&gt;
       </code-slide>
+      -->
       <text-slide>
         &lt;image-slider&gt;
         
@@ -82,8 +84,8 @@
         Images, but better!
         
         &lt;image-slider&gt;
-          &lt;img src="first.jpg"&gt;
-          &lt;img src="second.jpg"&gt;
+          &lt;img src="first.jpg" alt="First!"&gt;
+          &lt;img src="second.jpg" alt="Second!"&gt;
         &lt;/image-slider&gt;
       </code-slide>
       <text-slide>
@@ -121,7 +123,7 @@
         
         &lt;leaflet-map lat="47" lng="-122" zoom="7"&gt;
           &lt;tile-layer layer="cartoPositron"&gt;&lt;/tile-layer&gt;
-          &lt;map-marker lat="47" lng="-122"&gt;
+          &lt;map-marker lat="47" lng="-122" id="marked"&gt;
             This is the pop-up content!
           &lt;/map-marker&gt;
           &lt;geo-json&gt;
