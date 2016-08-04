@@ -35,14 +35,19 @@ text-slide, code-slide {
   display: none;
 }
 
-a.control {
+.paging {
   position: fixed;
-  bottom: 10px;
+  right: 20px;
+  bottom: 20px;
+}
+
+a.control {
+  font-family: monospace;
   font-size: 100px;
   font-weight: bold;
   color: #333;
   cursor: pointer;
-  padding: 20px;
+  padding: 20px 0;
   transition: opacity .2s linear;
   opacity: .3;
 }
