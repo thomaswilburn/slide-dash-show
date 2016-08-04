@@ -49,12 +49,11 @@ a.control {
   font-family: monospace;
   font-size: 100px;
   font-weight: bold;
-  color: #333;
+  color: #808;
   cursor: pointer;
   padding: 0;
   transition: opacity .2s linear;
   opacity: .3;
-  text-shadow: 0 0 2px white;
 }
 
 a.control:hover,
