@@ -32,7 +32,7 @@ textProto.parseSlide = function() {
   var html = this.innerHTML;
   var lines = html.trim().split("\n");
   // First line is a headline
-  var headline = lines.shift();
+  var headline = lines.shift().replace(/\*(.*?)\*/g, "<b>$1</b>");
   var body = lines.map(function(line) {
     line = line.trim();
     // Blank lines become paragraphs

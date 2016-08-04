@@ -1,7 +1,8 @@
 // Important notes:
 // 1. <slide-show> uses events and properties for all communication
-// 2. Parents shouldn't assume that children exist or are upgraded
-// 3. Code is written to work in V0 and V1
+// 2. Elements should be do one thing well
+// 3. Parents shouldn't assume that children exist or are upgraded, and vice versa
+// 4. Code can be written to support V0 and V1 specs
 
 var $ = s => Array.prototype.slice.call(document.querySelectorAll(s));
 

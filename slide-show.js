@@ -11,6 +11,7 @@ var stylesheet = `
     font-family: Roboto, sans-serif;
     font-size: 36px;
     text-align: center;
+    color: #242824;
   }
   
   .content h1 {
@@ -51,6 +52,7 @@ var stylesheet = `
     background: #333;
     color: #eee;
     display: inline-block;
+    line-height: 1.5;
   }
   `;
 

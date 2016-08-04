@@ -2,14 +2,18 @@
   box-sizing: border-box;
 }
 
+body {
+  background: #242824;
+}
+
 slide-show {
   position: fixed;
   top: 10px;
   left: 30px;
   right: 30px;
   bottom: 30px;
-  background: radial-gradient(white, #f8f8f8);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, .2), 0 8px 12px rgba(0, 0, 0, .1);
+  background: radial-gradient(#f8f8f8, #f2f2f2);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, .3), 0 8px 12px rgba(0, 0, 0, .15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,7 +30,7 @@ slide-show {
 
 .progress-bar .bar {
   background: #808;
-  height: 8px;
+  height: 12px;
   width: 0px;
   transition: all .2s ease-in-out;
 }
@@ -37,8 +41,8 @@ text-slide, code-slide {
 
 .paging {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: 0;
+  bottom: 0;
 }
 
 a.control {
@@ -47,9 +51,10 @@ a.control {
   font-weight: bold;
   color: #333;
   cursor: pointer;
-  padding: 20px 0;
+  padding: 0;
   transition: opacity .2s linear;
   opacity: .3;
+  text-shadow: 0 0 2px white;
 }
 
 a.control:hover,
