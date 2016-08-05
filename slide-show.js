@@ -97,12 +97,14 @@ slideShowProto.upgrade = function() {
   this.waitingToRender = null;
   
   // Let's make some state available and start up
-  this.state = { current: this.getAttribute("index") * 1, length: 0, content, root };
+  this.index = this.getAttribute("index") * 1;
+  this.length = 0;
+  this.dom = { content, root };
   this.scheduleRender();
   this.dispatchEvent(new CustomEvent("slides-ready", {
     detail: {
-      index: this.state.current,
-      length: this.state.length
+      index: this.index,
+      length: this.length
     }
   }));
   
@@ -141,7 +143,7 @@ slideShowProto.detachedCallback = slideShowProto.disconnectedCallback = function
 
 // Lots of things may trigger render, but defer it to a single update on the next frame
 slideShowProto.scheduleRender = function(index) {
-  if (typeof index != "undefined") this.state.current = index * 1;
+  if (typeof index != "undefined") this.index = index * 1;
   if (this.waitingToRender) return;
   this.waitingToRender = true;
   window.requestAnimationFrame(() => this.render());
@@ -152,22 +154,22 @@ slideShowProto.render = function() {
   // Find all slide children
   var items = this.querySelectorAll("text-slide,code-slide");
   // Update our internal state a bit
-  this.state.length = items.length;
-  if (this.state.current > items.length - 1) this.state.current = items.length - 1;
-  if (this.state.current < 0) this.state.current = 0;
+  this.length = items.length;
+  if (this.index > items.length - 1) this.index = items.length - 1;
+  if (this.index < 0) this.index = 0;
   // get the current slide
-  var selected = items[this.state.current];
+  var selected = items[this.index];
   if (!selected) return;
   // Load the slide's contents from participating elements
   var slide = selected.parsedContent || {}
   // Fill the content div with our new slide text
-  var content = this.state.content;
+  var content = this.dom.content;
   content.innerHTML = `<h1>${slide.headline}</h1> ${slide.body}`;
   content.firstElementChild.focus();
   // Let listeners know that we've changed slides
   this.dispatchEvent(new CustomEvent("slides-changed", {
     detail: {
-      index: this.state.current,
+      index: this.index,
       length: items.length
     }
   }));
@@ -175,11 +177,11 @@ slideShowProto.render = function() {
 
 //boring convenience methods
 slideShowProto.getSlide = function() {
-  return this.state.current;
+  return this.index;
 };
 
 slideShowProto.shiftSlide = function(delta) {
-  this.scheduleRender(this.state.current + delta);
+  this.scheduleRender(this.index + delta);
 };
 
 slideShowProto.nextSlide = function() {
