@@ -97,13 +97,13 @@ slideShowProto.upgrade = function() {
   this.waitingToRender = null;
   
   // Let's make some state available and start up
-  this.index = this.getAttribute("index") * 1;
+  this.index_ = this.getAttribute("index") * 1;
   this.length = 0;
   this.dom = { content, root };
   this.scheduleRender();
   this.dispatchEvent(new CustomEvent("slides-ready", {
     detail: {
-      index: this.index,
+      index: this.index_,
       length: this.length
     }
   }));
@@ -143,7 +143,7 @@ slideShowProto.detachedCallback = slideShowProto.disconnectedCallback = function
 
 // Lots of things may trigger render, but defer it to a single update on the next frame
 slideShowProto.scheduleRender = function(index) {
-  if (typeof index != "undefined") this.index = index * 1;
+  if (typeof index != "undefined") this.index_ = index * 1;
   if (this.waitingToRender) return;
   this.waitingToRender = true;
   window.requestAnimationFrame(() => this.render());
@@ -155,10 +155,10 @@ slideShowProto.render = function() {
   var items = this.querySelectorAll("text-slide,code-slide");
   // Update our internal state a bit
   this.length = items.length;
-  if (this.index > items.length - 1) this.index = items.length - 1;
-  if (this.index < 0) this.index = 0;
+  if (this.index_ > items.length - 1) this.index_ = items.length - 1;
+  if (this.index_ < 0) this.index_ = 0;
   // get the current slide
-  var selected = items[this.index];
+  var selected = items[this.index_];
   if (!selected) return;
   // Load the slide's contents from participating elements
   var slide = selected.parsedContent || {}
@@ -169,7 +169,7 @@ slideShowProto.render = function() {
   // Let listeners know that we've changed slides
   this.dispatchEvent(new CustomEvent("slides-changed", {
     detail: {
-      index: this.index,
+      index: this.index_,
       length: items.length
     }
   }));
@@ -177,11 +177,23 @@ slideShowProto.render = function() {
 
 //boring convenience methods
 slideShowProto.getSlide = function() {
-  return this.index;
+  return this.index_;
 };
 
+//proxy index so that we can schedule render when it changes
+Object.defineProperty(slideShowProto, "index", {
+  enumerable: true,
+  get: function() {
+    return this.index_;
+  },
+  set: function(i) {
+    this.index_ = i;
+    this.scheduleRender(i);
+  }
+});
+
 slideShowProto.shiftSlide = function(delta) {
-  this.scheduleRender(this.index + delta);
+  this.scheduleRender(this.index_ + delta);
 };
 
 slideShowProto.nextSlide = function() {
