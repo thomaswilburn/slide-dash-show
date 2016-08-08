@@ -59,22 +59,19 @@ var stylesheet = `
 // create the element constructor
 // This is only called directly in V1
 // V1 also recommends `class SlideShowElement extends HTMLElement`
-var SlideShowElement = function() {
-  this.upgrade();
-}
+var SlideShowElement = function() {}
 
 // Create its prototype
 var slideShowProto = SlideShowElement.prototype = Object.create(HTMLElement.prototype);
 
 // Called when the element is first created
 // V1: this is done in the constructor
-slideShowProto.createdCallback = function() {
-  this.upgrade();
-};
+slideShowProto.createdCallback = function() {};
 
 // By moving initialization into its own method, we can trigger it for
 // both V0 and V1 codepaths
 slideShowProto.upgrade = function() {
+  this.upgraded = true;
 
   // If we have Shadow DOM, let's make a root to put our generated HTML
   // Note: createShadowRoot() is becoming attachShadow()
@@ -136,7 +133,9 @@ slideShowProto.attributeChangedCallback = function(prop, before, after) {
 
 // V1: this is "connectedCallback" instead
 // This is used in a more interesting way in slide-elements.js
-slideShowProto.attachedCallback = slideShowProto.connectedCallback = function() {};
+slideShowProto.attachedCallback = slideShowProto.connectedCallback = function() {
+  if (!this.upgraded) this.upgrade();
+};
 
 // V1: this becomes "disconnectedCallback"
 slideShowProto.detachedCallback = slideShowProto.disconnectedCallback = function() {};

@@ -5,9 +5,7 @@
 var textProto = Object.create(HTMLElement.prototype);
 var codeProto = Object.create(textProto);
 
-textProto.createdCallback = function() {
-  this.notifyParent();
-};
+textProto.createdCallback = function() {};
 
 textProto.notifyParent = function() {
   var e = new CustomEvent("slide-content", { bubbles: true });
@@ -20,6 +18,7 @@ textProto.attachedCallback = function() {
     this.observer_ = new MutationObserver(() => this.notifyParent());
   }
   this.observer_.observe(this, { characterData: true, childList: true, subtree: true });
+  this.notifyParent();
 }
 
 textProto.detachedCallback = function() {
