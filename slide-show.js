@@ -59,10 +59,16 @@ var stylesheet = `
 // create the element constructor
 // This is only called directly in V1
 // V1 also recommends `class SlideShowElement extends HTMLElement`
-var SlideShowElement = function() {}
+// The `HTMLElement.call(self)` is handled by the polyfill
+var SlideShowElement = function(self) {
+  self = HTMLElement.call(self || this);
+  return self;
+}
 
 // Create its prototype
-var slideShowProto = SlideShowElement.prototype = Object.create(HTMLElement.prototype);
+var slideShowProto = SlideShowElement.prototype = Object.create(HTMLElement.prototype, {
+  constructor: { value: SlideShowElement }
+});
 
 // Called when the element is first created
 // V1: this is done in the constructor
@@ -204,6 +210,6 @@ slideShowProto.previousSlide = function() {
 };
 
 // And now, the final registration:
-document.registerElement("slide-show", { prototype: slideShowProto });
+// document.registerElement("slide-show", { prototype: slideShowProto });
 // V1 version:
-// window.customElements.define("slide-show", SlideShowElement);
+window.customElements.define("slide-show", SlideShowElement);
