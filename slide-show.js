@@ -66,9 +66,8 @@ var SlideShowElement = function(self) {
 }
 
 // Create its prototype
-var slideShowProto = SlideShowElement.prototype = Object.create(HTMLElement.prototype, {
-  constructor: { value: SlideShowElement }
-});
+var slideShowProto = SlideShowElement.prototype = Object.create(HTMLElement.prototype);
+slideShowProto.constructor = SlideShowElement;
 
 // Called when the element is first created
 // V1: this is done in the constructor
